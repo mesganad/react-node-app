@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res, next) => {
-  const { name, username, role, password } = req.body;
+  const { name, username, role, password, email } = req.body;
 
   let hashpwd;
 
@@ -16,17 +16,17 @@ exports.signup = async (req, res, next) => {
   }
 
   const sqlInsert =
-    "insert into projectdb.user (name, username, role,project_id, password) values (?, ?, ?,?, ?)";
+    "insert into projectdb.user (name, username, role, password,email) values (?, ?, ?,?, ?)";
   try {
     const connResult = await db.query(sqlInsert, [
       name,
       username,
       role,
-      1,
       hashpwd,
+      email,
     ]);
     console.log(connResult[0]);
-    res.json({ success: 1 });
+    res.json({ success: true });
   } catch (err) {
     next(err);
   }

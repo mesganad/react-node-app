@@ -18,48 +18,47 @@ const Login = (props) => {
   };
 
   const handleLogin = async () => {
-    console.log(user);
     const resp = await axios.post(`${url}/api/signin`, user);
-    console.log("returned data: ", resp.data);
-    setRresponse(resp.data);
-    dispatch({ type: "login", token: resp.data.token });
 
-    console.log("while dispatching: ", resp.data.token);
+    localStorage.setItem("user", JSON.stringify(resp.data));
+
+    setRresponse(resp.data);
+
+    dispatch({ type: "login", token: resp.data.token });
 
     props.history.push("/admin", user.username);
   };
 
   return (
-    <Container>
-      <h2> Welcome to Login Page, {account.name} </h2>
+    <div>
+      <h2> Welcome to Login Page </h2>
       <div className="login">
-        <lable>Username</lable>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={user.username}
-          onChange={handleChange}
-        />
-        <br />
-
-        <label>Password</label>
-        <input
-          type="text"
-          id="password"
-          name="password"
-          value={user.password}
-          onChange={handleChange}
-        />
-        <br />
-
-        <button onClick={handleLogin}>Login</button>
-        <br />
         <div>
-          <button>Signup</button>
+          <label>Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={user.username}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label>Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={user.password}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <button onClick={handleLogin}>Login</button>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 export default Login;

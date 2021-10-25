@@ -6,7 +6,13 @@ import { url } from "../config";
 const Signup = (props) => {
   // const dispatch = useDispatch();
 
-  const cleanAccount = { name: "", username: "", role: "", password: "" };
+  const cleanAccount = {
+    name: "",
+    username: "",
+    role: "",
+    password: "",
+    email: "",
+  };
   const [account, setAccount] = useState(cleanAccount);
 
   //validation
@@ -16,18 +22,19 @@ const Signup = (props) => {
   const handleCreate = (e) => {
     e.preventDefault();
 
+    console.log("Role type : ", account.role);
     const isValid = formValidation();
     if (isValid) {
       Axios.post(`${url}/api/signup`, account)
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
         })
         .catch((err) => {
           console.log(err);
         });
 
       // dispatch({ type: "create", account: account });
-      props.history.push("/login", account);
+      props.history.push("/");
     }
     setAccount(cleanAccount);
   };
@@ -92,16 +99,35 @@ const Signup = (props) => {
             })}
           </div>
           <div>
-            Pick Role
-            <select value={account.role} onChange={handleFieldChange}>
-              <option value="admin">Admin</option>
+            Email
+            <input
+              type="text"
+              id="email"
+              placeholder="email"
+              name="email"
+              value={account.email}
+              onChange={handleFieldChange}
+            />
+            {/* {Object.keys(usernameError).map((key) => {
+              return <div style={{ color: "red" }}>{usernameError[key]}</div>;
+            })} */}
+          </div>
+          <div>
+            Role
+            <select
+              name="role"
+              value={account.role}
+              onChange={handleFieldChange}
+            >
+              <option value="creoadmin">Creospan Admin</option>
+              <option value="clientadmin">Client Admin</option>
               <option value="employee">Employee</option>
             </select>
           </div>
           <div>
             Password
             <input
-              type="text"
+              type="password"
               id="password"
               placeholder="password"
               name="password"
