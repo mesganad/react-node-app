@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,12 +6,15 @@ import {
   Link,
   NavLink,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import "./NavBar.css";
 import Dashboard from "../menus/Dashboard";
 import Clients from "../menus/Clients";
 import Projects from "../menus/Projects";
+import AddProject from "../menus/AddProject";
+import AddClient from "../menus/AddClient";
+import Tasks from "../menus/Tasks";
+import Signup from "../authentication/Signup";
 
 import {
   Navbar,
@@ -22,11 +25,12 @@ import {
   Button,
 } from "react-bootstrap";
 
-const NavBar = () => {
-  const loginData = JSON.parse(localStorage.getItem("user"));
+const NavBar = (props) => {
+  let loginData = JSON.parse(localStorage.getItem("user"));
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.clear("user");
+    window.location.reload();
     window.location.href = "/";
   };
 
@@ -44,26 +48,71 @@ const NavBar = () => {
               style={{ maxHeight: "100px" }}
               navbarScroll
             >
-              <Nav.Link as={Link} to={"/dashboard"}>
-                Dashboard
-              </Nav.Link>
-              <Nav.Link as={Link} to={"/clients"}>
-                Clients
-              </Nav.Link>
-              <Nav.Link as={Link} to={"/projects"}>
-                Projects
-              </Nav.Link>
-            </Nav>
-
-            <div className="logoutLink">
               {loginData ? (
-                <a href="/" onClick={handleLogout}>
-                  Logout
-                </a>
+                <Nav.Link as={Link} to={"/dashboard"}>
+                  Dashboard
+                </Nav.Link>
               ) : (
                 <span></span>
               )}
-            </div>
+              {loginData && loginData.role === "creoadmin" ? (
+                <Nav.Link as={Link} to={"/clients"}>
+                  Clients
+                </Nav.Link>
+              ) : (
+                <span></span>
+              )}
+
+              {loginData ? (
+                <Nav.Link as={Link} to={"/projects"}>
+                  Projects
+                </Nav.Link>
+              ) : (
+                <span></span>
+              )}
+
+              {loginData &&
+              (loginData.role === "creoadmin" ||
+                loginData.role === "clientAdmin") ? (
+                <Nav.Link as={Link} to={"/addProject"}>
+                  Add Project
+                </Nav.Link>
+              ) : (
+                <span></span>
+              )}
+              {loginData && loginData.role === "creoadmin" ? (
+                <Nav.Link as={Link} to={"/addClient"}>
+                  Add Client
+                </Nav.Link>
+              ) : (
+                <span></span>
+              )}
+              {loginData && loginData.role === "creoadmin" ? (
+                <Nav.Link as={Link} to={"/signup"}>
+                  Create User
+                </Nav.Link>
+              ) : (
+                <span></span>
+              )}
+
+              {loginData ? (
+                <Nav.Link as={Link} to={"/tasks"}>
+                  Tasks
+                </Nav.Link>
+              ) : (
+                <span></span>
+              )}
+
+              <div className="logoutLink">
+                {loginData != null ? (
+                  <Link to="/" onClick={handleLogout}>
+                    Logout
+                  </Link>
+                ) : (
+                  <span></span>
+                )}
+              </div>
+            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
@@ -71,13 +120,37 @@ const NavBar = () => {
         <Switch>
           <Route path="/dashboard" component={Dashboard} />
           {loginData && loginData.role === "creoadmin" && (
-            <Route path="/clients" component={Clients} />
-          )}
+          <Route path="/clients" component={Clients} />
+           )} 
 
           {loginData &&
             (loginData.role === "creoadmin" ||
               loginData.role === "clientadmin") && (
               <Route path="/projects" component={Projects} />
+            )}
+
+{loginData && (
+              <Route path="/" component={Dashboard} />
+            )}
+
+{loginData &&
+            (loginData.role === "creoadmin" ||
+              loginData.role === "clientadmin") && (
+              <Route path="/addProject" component={AddProject} />
+            )}
+
+{loginData &&
+            (loginData.role === "creoadmin") && (
+              <Route path="/addClient" component={AddClient} />
+            )}
+
+{loginData &&
+            (loginData.role === "creoadmin") && (
+              <Route path="/signup" component={Signup} />
+            )}
+
+{loginData  && (
+              <Route path="/tasks" component={Tasks} />
             )}
         </Switch>
       </div>

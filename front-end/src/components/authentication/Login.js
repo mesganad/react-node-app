@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-// import { useDispatch } from "react-redux";
+ import { useDispatch } from "react-redux";
 import { Form, Button, FormGroup, Label, Input } from "reactstrap";
 import { url } from "../../config";
 import "./Login.css";
@@ -9,7 +9,7 @@ const initUser = { username: "", password: "" };
 
 const Login = (props) => {
   const [user, setUser] = React.useState({ ...initUser });
-  // const dispatch = useDispatch();
+   const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -22,7 +22,7 @@ const Login = (props) => {
 
     localStorage.setItem("user", JSON.stringify(resp.data));
 
-    // dispatch({ type: "login", loginData: resp.data });
+     dispatch({ type: "login", loginData: resp.data });
 
     const loginData = resp.data;
     console.log(loginData);

@@ -9,15 +9,21 @@ import Login from "./components/authentication/Login";
 import CreospanAdmin from "./components/creospan/CreospanAdmin";
 import ClientAdmin from "./components/clients/ClientAdmin";
 import Employee from "./components/clients/Employee";
+import Dashboard from "./components/menus/Dashboard";
 
 import React from "react";
 
 function App() {
+
+  let loginData = JSON.parse(localStorage.getItem("user"));
   return (
     <div className="app__container">
       <NavBar/>
       <BrowserRouter>
-        <Route exact path="/" component={Login} />
+       
+        {!loginData && (
+              <Route path="/" component={Login} />
+            )}
         <Route path="/signup" component={Signup} />
         <Route path="/creoadmin" component={CreospanAdmin} />
         <Route path="/clientadmin" component={ClientAdmin} />
