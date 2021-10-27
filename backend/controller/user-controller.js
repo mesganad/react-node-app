@@ -4,11 +4,28 @@ const bcrypt = require("bcryptjs");
 
 const jwt = require("jsonwebtoken");
 
+const Joi = require("joi");
+
+//Handling signup request
 exports.signup = async (req, res, next) => {
+  //Input validation
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+    username: Joi.string().min(3).required(),
+    password: Joi.string().min(3).required(),
+    role: Joi.string().required(),
+    email: Joi.string().required().email(),
+  });
+
+  const result = schema.validate(req.body);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
+
   const { name, username, role, password, email } = req.body;
 
   let hashpwd;
-
   try {
     hashpwd = await bcrypt.hash(password, 10);
   } catch (hasherror) {
@@ -18,21 +35,31 @@ exports.signup = async (req, res, next) => {
   const sqlInsert =
     "insert into projectdb.user (name, username, role, password,email) values (?, ?, ?,?, ?)";
   try {
-    const connResult = await db.query(sqlInsert, [
-      name,
-      username,
-      role,
-      hashpwd,
-      email,
-    ]);
-    console.log(connResult[0]);
-    res.json({ success: true });
+    await db.query(
+      sqlInsert,
+      [name, username, role, hashpwd, email],
+      (err, resp) => {
+        res.send({ success: true });
+      }
+    );
   } catch (err) {
     next(err);
   }
 };
 
+//Handling login request
 exports.signin = async (req, res, next) => {
+  //Input validation
+  const schema = Joi.object({
+    username: Joi.string().min(3).required(),
+    password: Joi.string().min(3).required(),
+  });
+
+  const result = schema.validate(req.body);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
   const { username, password } = req.body;
   const sqlInsert = "SELECT password,role FROM projectdb.user where username=?";
 

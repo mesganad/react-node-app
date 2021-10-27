@@ -1,23 +1,27 @@
 import { BrowserRouter, Route } from "react-router-dom";
 import "./App.css";
 
-import NavBar from "./components/NabBar";
-import Signup from "./components/Signup";
+import NavBar from "./components/NavBar/NavBar";
+import Signup from "./components/authentication/Signup";
 
-import Login from "./components/Login";
+import Login from "./components/authentication/Login";
 
-import Admin from "./components/Admin";
+import CreospanAdmin from "./components/creospan/CreospanAdmin";
+import ClientAdmin from "./components/clients/ClientAdmin";
+import Employee from "./components/clients/Employee";
 
 import React from "react";
 
 function App() {
   return (
     <div className="app__container">
-      <NavBar />
+      <NavBar/>
       <BrowserRouter>
         <Route exact path="/" component={Login} />
         <Route path="/signup" component={Signup} />
-        <Route path="/admin" component={Admin} />
+        <Route path="/creoadmin" component={CreospanAdmin} />
+        <Route path="/clientadmin" component={ClientAdmin} />
+        <Route path="/employee" component={Employee} />
       </BrowserRouter>
     </div>
   );
