@@ -15,6 +15,9 @@ import AddProject from "../menus/AddProject";
 import AddClient from "../menus/AddClient";
 import Tasks from "../menus/Tasks";
 import Signup from "../authentication/Signup";
+import CreospanAdmin from "../creospan/CreospanAdmin";
+import ClientAdmin from "../clients/ClientAdmin";
+import Employee from "../clients/Employee";
 
 import {
   Navbar,
@@ -48,69 +51,60 @@ const NavBar = (props) => {
               style={{ maxHeight: "100px" }}
               navbarScroll
             >
-              {loginData ? (
-                <Nav.Link as={Link} to={"/dashboard"}>
+              {loginData && loginData.role === "creoadmin" ? (
+                <Nav.Link as={Link} to={"/creoadmin"}>
                   Dashboard
                 </Nav.Link>
-              ) : (
-                <span></span>
-              )}
+              ) : null}
+              {loginData && loginData.role === "clientadmin" ? (
+                <Nav.Link as={Link} to={"/clientadmin"}>
+                  Dashboard
+                </Nav.Link>
+              ) : null}
+              {loginData && loginData.role === "employee" ? (
+                <Nav.Link as={Link} to={"/employee"}>
+                  Dashboard
+                </Nav.Link>
+              ) : null}
               {loginData && loginData.role === "creoadmin" ? (
                 <Nav.Link as={Link} to={"/clients"}>
                   Clients
                 </Nav.Link>
-              ) : (
-                <span></span>
-              )}
-
+              ) : null}
               {loginData ? (
                 <Nav.Link as={Link} to={"/projects"}>
                   Projects
                 </Nav.Link>
-              ) : (
-                <span></span>
-              )}
-
+              ) : null}
               {loginData &&
               (loginData.role === "creoadmin" ||
-                loginData.role === "clientAdmin") ? (
+                loginData.role === "clientadmin") ? (
                 <Nav.Link as={Link} to={"/addProject"}>
                   Add Project
                 </Nav.Link>
-              ) : (
-                <span></span>
-              )}
+              ) : null}
               {loginData && loginData.role === "creoadmin" ? (
                 <Nav.Link as={Link} to={"/addClient"}>
                   Add Client
                 </Nav.Link>
-              ) : (
-                <span></span>
-              )}
+              ) : null}
               {loginData && loginData.role === "creoadmin" ? (
                 <Nav.Link as={Link} to={"/signup"}>
                   Create User
                 </Nav.Link>
-              ) : (
-                <span></span>
-              )}
-
+              ) : null}
               {loginData ? (
                 <Nav.Link as={Link} to={"/tasks"}>
                   Tasks
                 </Nav.Link>
-              ) : (
-                <span></span>
-              )}
-
+              ) : null}
+              &nbsp;&nbsp;&nbsp;&nbsp;
               <div className="logoutLink">
                 {loginData != null ? (
                   <Link to="/" onClick={handleLogout}>
                     Logout
                   </Link>
-                ) : (
-                  <span></span>
-                )}
+                ) : null}
               </div>
             </Nav>
           </Navbar.Collapse>
@@ -120,8 +114,8 @@ const NavBar = (props) => {
         <Switch>
           <Route path="/dashboard" component={Dashboard} />
           {loginData && loginData.role === "creoadmin" && (
-          <Route path="/clients" component={Clients} />
-           )} 
+            <Route path="/clients" component={Clients} />
+          )}
 
           {loginData &&
             (loginData.role === "creoadmin" ||
@@ -129,29 +123,36 @@ const NavBar = (props) => {
               <Route path="/projects" component={Projects} />
             )}
 
-{loginData && (
+          {/* {loginData && (
               <Route path="/" component={Dashboard} />
-            )}
+            )} */}
 
-{loginData &&
+          {loginData &&
             (loginData.role === "creoadmin" ||
               loginData.role === "clientadmin") && (
               <Route path="/addProject" component={AddProject} />
             )}
 
-{loginData &&
-            (loginData.role === "creoadmin") && (
-              <Route path="/addClient" component={AddClient} />
-            )}
+          {loginData && loginData.role === "creoadmin" && (
+            <Route path="/addClient" component={AddClient} />
+          )}
 
-{loginData &&
-            (loginData.role === "creoadmin") && (
-              <Route path="/signup" component={Signup} />
-            )}
+          {loginData && loginData.role === "creoadmin" && (
+            <Route path="/signup" component={Signup} />
+          )}
 
-{loginData  && (
-              <Route path="/tasks" component={Tasks} />
-            )}
+          {loginData && loginData.role === "creoadmin" && (
+            <Route path="/creoadmin" component={CreospanAdmin} />
+          )}
+          {loginData && loginData.role === "clientadmin" && (
+            <Route path="/clientadmin" component={ClientAdmin} />
+          )}
+
+          {loginData && loginData.role === "employee" && (
+            <Route path="/employee" component={Employee} />
+          )}
+
+          {loginData && <Route path="/tasks" component={Tasks} />}
         </Switch>
       </div>
     </Router>

@@ -39,11 +39,13 @@ exports.signup = async (req, res, next) => {
       sqlInsert,
       [name, username, role, hashpwd, email],
       (err, resp) => {
-        res.send({ success: true });
+        res
+          .status(200)
+          .send({ success: true, message: "Successfully registered!" });
       }
     );
   } catch (err) {
-    next(err);
+    res.send(err);
   }
 };
 
@@ -68,14 +70,17 @@ exports.signin = async (req, res, next) => {
   db.query(sqlInsert, username, async (err, result) => {
     console.log(result);
     response = result[0];
-    console.log(response.role);
-    const isValid = await bcrypt.compare(password, response.password);
-    console.log(isValid);
+    let isValid = false;
+    if (response) {
+      console.log(response);
+      isValid = await bcrypt.compare(password, response.password);
+    }
     if (isValid) {
       const token = jwt.sign({ username, role: response.role }, "secret");
+
       res.json({ role: response.role, success: true, token: token });
     } else {
-      res.json({ message: "Invalid user" });
+      res.json({ success: false, message: "Invalid Username or Password" });
     }
   });
 };

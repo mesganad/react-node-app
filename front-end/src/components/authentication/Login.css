@@ -17,3 +17,11 @@
 Input {
   margin-bottom: 10px;
 }
+
+.errorMsg {
+  width: 100%;
+  max-width: 330px;
+  margin-left: 35%;
+  margin-top: 1%;
+  background-color: #e6888f;
+}

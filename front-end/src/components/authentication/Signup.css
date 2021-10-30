@@ -3,7 +3,6 @@
   max-width: 330px;
   padding: 15px;
   margin: auto;
-  margin-top: 1%;
   height: 100%;
   text-align: left;
 }
@@ -16,4 +15,11 @@
 
 Input {
   margin-bottom: 10px;
+}
+
+.successMsg {
+  width: 100%;
+  max-width: 330px;
+  margin-left: 35%;
+  margin-top: 1%;
 }

@@ -1,7 +1,7 @@
 function Employee() {
   return (
     <div>
-      <h2>This is Employee Portal</h2>
+      <h3>Welcome to Employee Dashboard</h3>
     </div>
   );
 }

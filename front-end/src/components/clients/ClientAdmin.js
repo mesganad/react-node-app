@@ -1,7 +1,7 @@
 function ClientAdmin() {
   return (
     <div>
-      <h2>This is Client Admin Portal</h2>
+      <h3>Welcome to Client Admin Dashboard</h3>
     </div>
   );
 }
