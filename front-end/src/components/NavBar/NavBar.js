@@ -29,6 +29,7 @@ import {
 } from "react-bootstrap";
 
 const NavBar = (props) => {
+   
   let loginData = JSON.parse(localStorage.getItem("user"));
 
   const handleLogout = () => {
@@ -52,7 +53,7 @@ const NavBar = (props) => {
               navbarScroll
             >
               {loginData && loginData.role === "creoadmin" ? (
-                <Nav.Link as={Link} to={"/creoadmin"}>
+                <Nav.Link as={Link} to={"/creoadmin"} data-testid="creodash">
                   Dashboard
                 </Nav.Link>
               ) : null}

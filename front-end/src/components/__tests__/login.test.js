@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import mockAxios from "jest-mock-axios";
 import { configure, shallow, mount } from "enzyme";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Adapter from "enzyme-adapter-react-17-updated";
@@ -9,8 +8,7 @@ import Login from "../authentication/Login";
 import CreospanAdmin from "../creospan/CreospanAdmin";
 
 configure({ adapter: new Adapter() });
-// mockAxios.mock("axios");
-
+jest.mock("axios");
 describe("Tesing Login Component", () => {
   it("Username field should have label", () => {
     render(<Login />);

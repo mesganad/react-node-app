@@ -9,9 +9,23 @@ import NavBar from "../NavBar/NavBar";
 
 configure({ adapter: new Adapter() });
 
-describe("Tesing NavBar Component", () => {
+describe("Tesing App Component", () => {
   it("Test Rendering", () => {
     const wrapper = shallow(<App />);
     expect(wrapper.exists(NavBar)).toEqual(true);
+  });
+
+  it("Testing Dashboard Link", () => {
+    const loginData = {
+      role: "creoadmin",
+      success: true,
+      token: "xyz",
+    };
+
+    localStorage.setItem("user", JSON.stringify(loginData));
+
+    render(<NavBar />);
+
+    expect(screen.getByTestId("creodash").textContent).toBe("Dashboard");
   });
 });
