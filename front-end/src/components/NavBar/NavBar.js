@@ -11,8 +11,7 @@ import "./NavBar.css";
 import Dashboard from "../menus/Dashboard";
 import Clients from "../menus/Clients";
 import Projects from "../menus/Projects";
-import AddProject from "../menus/AddProject";
-import AddClient from "../menus/AddClient";
+
 import Tasks from "../menus/Tasks";
 import Signup from "../authentication/Signup";
 import CreospanAdmin from "../creospan/CreospanAdmin";
@@ -77,24 +76,13 @@ const NavBar = (props) => {
                   Projects
                 </Nav.Link>
               ) : null}
-              {loginData &&
-              (loginData.role === "creoadmin" ||
-                loginData.role === "clientadmin") ? (
-                <Nav.Link as={Link} to={"/addProject"}>
-                  Add Project
-                </Nav.Link>
-              ) : null}
-              {loginData && loginData.role === "creoadmin" ? (
-                <Nav.Link as={Link} to={"/addClient"}>
-                  Add Client
-                </Nav.Link>
-              ) : null}
+             
               {loginData && loginData.role === "creoadmin" ? (
                 <Nav.Link as={Link} to={"/signup"}>
-                  Create User
+                  Register User
                 </Nav.Link>
               ) : null}
-              {loginData ? (
+              {(loginData && loginData.role !== "creoadmin") ? (
                 <Nav.Link as={Link} to={"/tasks"}>
                   Tasks
                 </Nav.Link>
@@ -102,7 +90,7 @@ const NavBar = (props) => {
               &nbsp;&nbsp;&nbsp;&nbsp;
               <div className="logoutLink">
                 {loginData != null ? (
-                  <Link to="/" onClick={handleLogout}>
+                  <Link to="/" onClick={handleLogout} data-testid="logout">
                     Logout
                   </Link>
                 ) : null}
@@ -128,15 +116,7 @@ const NavBar = (props) => {
               <Route path="/" component={Dashboard} />
             )} */}
 
-          {loginData &&
-            (loginData.role === "creoadmin" ||
-              loginData.role === "clientadmin") && (
-              <Route path="/addProject" component={AddProject} />
-            )}
-
-          {loginData && loginData.role === "creoadmin" && (
-            <Route path="/addClient" component={AddClient} />
-          )}
+         
 
           {loginData && loginData.role === "creoadmin" && (
             <Route path="/signup" component={Signup} />

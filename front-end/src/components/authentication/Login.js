@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+//import { useDispatch } from "react-redux";
 import { Form, Button, FormGroup, Label, Input, Alert } from "reactstrap";
 import { url } from "../../config";
 import "./Login.css";
@@ -103,7 +103,7 @@ const Login = (props) => {
         <span></span>
       )}
       <Form className="login-form" onSubmit={handleLogin}>
-        <h3 className="text-center">Welcome</h3>
+        <h3 className="text-center" data-testid="welcome">Welcome</h3>
 
         <FormGroup>
           <Label>Username</Label>

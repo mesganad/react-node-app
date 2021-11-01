@@ -6,6 +6,7 @@ import Adapter from "enzyme-adapter-react-17-updated";
 import userEvent from "@testing-library/user-event";
 import Login from "../authentication/Login";
 import CreospanAdmin from "../creospan/CreospanAdmin";
+jest.mock("axios");
 
 configure({ adapter: new Adapter() });
 jest.mock("axios");
@@ -35,7 +36,14 @@ describe("Tesing Login Component", () => {
   });
 
   it("should be able to submit form", () => {
-    const mockFn = jest.fn();
+    // const mockFn = jest.fn();
+    const resp = {
+      role: "creoadmin",
+      success: true,
+      token: "xyz",
+    };
+    axios.post.mockImplementation(() => Promise.resolve(resp));
+
     render(<Login />);
     const buttonNode = screen.getByTestId("signin");
     const usernameNode = screen.getByTestId("uname");
@@ -43,33 +51,34 @@ describe("Tesing Login Component", () => {
     fireEvent.change(usernameNode, { target: { value: "ruvi" } });
     fireEvent.change(passwordNode, { target: { value: "ruvi" } });
     fireEvent.submit(buttonNode);
-    expect(mockFn).toHaveBeenCalledTimes(0);
-    //expect(screen.getByTestId("errorMsg").textContent).toBe(
-    //"Invalid Username or Password"
-    //);
+    console.log(axios.post.mock.calls.length);
+    expect(axios.post.mock.calls.length).toBe(1);
+
+    // expect(screen.getByTestId("errorMsg").textContent).toBe(
+    // "Invalid Username or Password"
+    // );
   });
 
-  //   it("testing axios", () => {
-  //     render(<Login />);
+  // it("testing axios", () => {
+  //   render(<Login />);
 
-  //     const resp = {
-  //       role: "creoadmin",
-  //       success: true,
-  //       token: "xyz",
-  //     };
-  //     // axios.post.mockResolvedValue(resp);
-  //     //axios.post.mockImplementation(() => Promise.resolve(resp));
-  //     mockAxios.post.mockResolvedValueOnce(resp);
+  //   const resp = {
+  //     role: "creoadmin",
+  //     success: true,
+  //     token: "xyz",
+  //   };
+  //   axios.post.mockResolvedValue(resp);
+  //   axios.post.mockImplementation(() => Promise.resolve(resp));
 
-  //     const buttonNode = screen.getByTestId("signin");
-  //     const usernameNode = screen.getByTestId("uname");
-  //     const passwordNode = screen.getByTestId("pass");
-  //     fireEvent.change(usernameNode, { target: { value: "ruvi" } });
-  //     fireEvent.change(passwordNode, { target: { value: "ruvi" } });
-  //     fireEvent.submit(buttonNode);
-  //     return axios.post().then((data) => {
-  //       expect(data).toEqual(resp);
-  //     });
-  //     // expect(axios.get).toHaveBeenCalledTimes(1);
+  //   const buttonNode = screen.getByTestId("signin");
+  //   const usernameNode = screen.getByTestId("uname");
+  //   const passwordNode = screen.getByTestId("pass");
+  //   fireEvent.change(usernameNode, { target: { value: "ruvi" } });
+  //   fireEvent.change(passwordNode, { target: { value: "ruvi" } });
+  //   fireEvent.submit(buttonNode);
+  //   return axios.post().then((data) => {
+  //     expect(data).toEqual(resp);
   //   });
+
+  //});
 });
