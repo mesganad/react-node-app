@@ -1,0 +1,11 @@
+.client_container .openModalBtn {
+  width: 200px;
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  background-color: #304051;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 3%;
+}

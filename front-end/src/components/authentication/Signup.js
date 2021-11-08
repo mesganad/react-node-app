@@ -33,8 +33,9 @@ const Signup = (props) => {
       Axios.post(`${url}/api/signup`, account)
         .then((response) => {
           setSignupResponse(response.data);
-          console.log(signupResponse);
-          setAccount(cleanAccount);
+          if (response.data.success) {
+            setAccount(cleanAccount);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -125,6 +126,13 @@ const Signup = (props) => {
         <Alert className="successMsg" variant="success">
           {signupResponse.message}
         </Alert>
+      )}
+      {signupResponse && signupResponse.success === false ? (
+        <Alert className="errorMsg" variant="danger">
+          {signupResponse.message}
+        </Alert>
+      ) : (
+        <span></span>
       )}
 
       <Form onSubmit={handleCreate} className="signup-form">

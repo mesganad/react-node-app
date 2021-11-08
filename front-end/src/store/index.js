@@ -1,9 +1,9 @@
 import { createStore } from "redux";
 
-const loginReducer = (state = { loginData: {} }, action) => {
+const loginReducer = (state = { account: {} }, action) => {
   if (action.type === "login") {
-    console.log("From loginReducer: ", action.loginData);
-    return { ...state, loginData: action.loginData };
+    console.log("From loginReducer: ", action.account);
+    return { ...state, account: action.account };
   }
   return state;
 };

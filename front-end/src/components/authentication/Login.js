@@ -1,27 +1,51 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import axios from "axios";
-//import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Form, Button, FormGroup, Label, Input, Alert } from "reactstrap";
 import { url } from "../../config";
 import "./Login.css";
 
 const initUser = { username: "", password: "" };
+const clearAccount = {
+  name: "",
+  username: "",
+  role: "",
+  password: "",
+  email: "",
+  project_id: 0,
+};
 
 const Login = (props) => {
   const [user, setUser] = useState({ ...initUser });
   const [loginMessage, setLoginMessage] = useState("");
+  const [loginData, setLoginData] = useState({
+    role: "",
+    success: false,
+    token: "",
+    clearAccount,
+  });
 
   const [usernameError, setUsernameError] = useState({});
   const [passwordError, setPasswordError] = useState({});
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: "login", account: loginData.account });
+  }, [loginData]);
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  let loginData = { role: "", success: false, token: "" };
+  let logdata = { role: "", success: false, token: "", account: {} };
   let errorMsg = "";
+  let acct = {};
+
+  const getResponseData = (data) => {
+    setLoginData(data);
+    console.log("Inside getter: ", loginData);
+  };
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -29,37 +53,33 @@ const Login = (props) => {
 
     if (isValid) {
       axios.post(`${url}/api/signin`, user).then((resp) => {
-        loginData = resp.data;
-
-        console.log(resp.data.success);
-        console.log(loginData.success);
-
-        if (loginData.success) {
-          localStorage.setItem("user", JSON.stringify(loginData));
-
+        if (resp.data.success) {
+          logdata = resp.data;
+          getResponseData(logdata);
+          localStorage.setItem("account", JSON.stringify(resp.data));
+          console.log(
+            "From local storage: ",
+            JSON.parse(localStorage.getItem("account"))
+          );
           switch (loginData.role) {
             case "creoadmin":
-              props.history.push("/creoadmin", user);
+              props.history.push("/creoadmin", loginData);
               break;
             case "clientadmin":
-              props.history.push("/clientadmin", user);
+              props.history.push("/clientadmin", loginData);
               break;
             case "employee":
-              props.history.push("/employee", user);
+              props.history.push("/employee", loginData);
               break;
             default:
               props.history.push("/");
           }
-
-          // dispatch({ type: "login", loginData: loginData });
-          window.location.reload();
         } else {
           errorMsg = loginData.message;
           setLoginMessage(errorMsg);
-          console.log("after login: ", errorMsg);
+          console.log("after login: ", loginMessage);
         }
       });
-      console.log("from error: ", loginMessage);
     }
   };
 
@@ -103,7 +123,9 @@ const Login = (props) => {
         <span></span>
       )}
       <Form className="login-form" onSubmit={handleLogin}>
-        <h3 className="text-center" data-testid="welcome">Welcome</h3>
+        <h3 className="text-center" data-testid="welcome">
+          Welcome
+        </h3>
 
         <FormGroup>
           <Label>Username</Label>

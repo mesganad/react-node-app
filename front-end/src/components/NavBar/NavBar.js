@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,12 +12,14 @@ import "./NavBar.css";
 import Dashboard from "../menus/Dashboard";
 import Clients from "../menus/Clients";
 import Projects from "../menus/Projects";
-
 import Tasks from "../menus/Tasks";
 import Signup from "../authentication/Signup";
 import CreospanAdmin from "../creospan/CreospanAdmin";
 import ClientAdmin from "../clients/ClientAdmin";
 import Employee from "../clients/Employee";
+import PageNotFound from "../menus/PageNotFound";
+import Login from "../authentication/Login";
+import SideBar from "../sidebar/SideBar";
 
 import {
   Navbar,
@@ -26,15 +29,18 @@ import {
   FormControl,
   Button,
 } from "react-bootstrap";
+import AdminDashboard from "../dashboard/admindashboard";
 
-const NavBar = (props) => {
-   
-  let loginData = JSON.parse(localStorage.getItem("user"));
+const NavBar = () => {
+  //let loginData = JSON.parse(localStorage.getItem("account"));
+
+  const loginData = useSelector((state) => state.account);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    localStorage.clear("user");
-    window.location.reload();
-    window.location.href = "/";
+    dispatch({ type: "login", account: null });
+    // window.location.reload();
+    //window.location.href = "/";
   };
 
   return (
@@ -67,23 +73,24 @@ const NavBar = (props) => {
                 </Nav.Link>
               ) : null}
               {loginData && loginData.role === "creoadmin" ? (
-                <Nav.Link as={Link} to={"/clients"}>
+                <Nav.Link as={Link} to={"/clients"} data-testid="clients">
                   Clients
                 </Nav.Link>
               ) : null}
               {loginData ? (
-                <Nav.Link as={Link} to={"/projects"}>
+                <Nav.Link as={Link} to={"/projects"} data-testid="projects">
                   Projects
                 </Nav.Link>
               ) : null}
-             
               {loginData && loginData.role === "creoadmin" ? (
-                <Nav.Link as={Link} to={"/signup"}>
+                <Nav.Link as={Link} to={"/signup"} data-testid="register">
                   Register User
                 </Nav.Link>
               ) : null}
-              {(loginData && loginData.role !== "creoadmin") ? (
-                <Nav.Link as={Link} to={"/tasks"}>
+              {loginData &&
+              (loginData.role === "employee" ||
+                loginData.role === "clientadmin") ? (
+                <Nav.Link as={Link} to={"/tasks"} data-testid="tasks">
                   Tasks
                 </Nav.Link>
               ) : null}
@@ -99,42 +106,44 @@ const NavBar = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <div>
-        <Switch>
-          <Route path="/dashboard" component={Dashboard} />
-          {loginData && loginData.role === "creoadmin" && (
-            <Route path="/clients" component={Clients} />
-          )}
-
-          {loginData &&
-            (loginData.role === "creoadmin" ||
-              loginData.role === "clientadmin") && (
-              <Route path="/projects" component={Projects} />
+      <div className="main_container">
+        <SideBar />
+        <div className="content">
+          <Switch>
+            <Route exact path="/dashboard" component={AdminDashboard} />
+            {loginData && loginData.role === "creoadmin" && (
+              <Route exact path="/clients" component={Clients} />
             )}
 
-          {/* {loginData && (
-              <Route path="/" component={Dashboard} />
-            )} */}
+            {loginData &&
+              (loginData.role === "creoadmin" ||
+                loginData.role === "clientadmin") && (
+                <Route exact path="/projects" component={Projects} />
+              )}
 
-         
+            {loginData && loginData.role === "creoadmin" && (
+              <Route exact path="/signup" component={Signup} />
+            )}
 
-          {loginData && loginData.role === "creoadmin" && (
-            <Route path="/signup" component={Signup} />
-          )}
+            {loginData && loginData.role === "creoadmin" && (
+              <Route exact path="/creoadmin" component={CreospanAdmin} />
+            )}
+            {loginData && loginData.role === "clientadmin" && (
+              <Route exact path="/clientadmin" component={ClientAdmin} />
+            )}
 
-          {loginData && loginData.role === "creoadmin" && (
-            <Route path="/creoadmin" component={CreospanAdmin} />
-          )}
-          {loginData && loginData.role === "clientadmin" && (
-            <Route path="/clientadmin" component={ClientAdmin} />
-          )}
+            {loginData && loginData.role === "employee" && (
+              <Route exact path="/employee" component={Employee} />
+            )}
 
-          {loginData && loginData.role === "employee" && (
-            <Route path="/employee" component={Employee} />
-          )}
+            {loginData && <Route exact path="/tasks" component={Tasks} />}
+            {!loginData ? <Route exact path="/" component={Login} /> : null}
 
-          {loginData && <Route path="/tasks" component={Tasks} />}
-        </Switch>
+            {loginData === null && (
+              <Route exact path="*" component={PageNotFound} />
+            )}
+          </Switch>
+        </div>
       </div>
     </Router>
   );

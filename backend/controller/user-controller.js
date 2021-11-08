@@ -24,6 +24,7 @@ exports.signup = async (req, res, next) => {
   }
 
   const { name, username, role, password, email } = req.body;
+  console.log("Username: ", username);
 
   let hashpwd;
   try {
@@ -32,20 +33,29 @@ exports.signup = async (req, res, next) => {
     next(hasherror);
   }
 
+  const accountQuery = "select * from projectdb.user where username=?";
   const sqlInsert =
     "insert into projectdb.user (name, username, role, password,email) values (?, ?, ?,?, ?)";
+
   try {
-    await db.query(
-      sqlInsert,
-      [name, username, role, hashpwd, email],
-      (err, resp) => {
-        res
-          .status(200)
-          .send({ success: true, message: "Successfully registered!" });
+    await db.query(accountQuery, username, (error, accountResult) => {
+      if (accountResult && accountResult[0]) {
+        res.send({ success: false, message: "Account already exists!" });
+        return;
+      } else {
+        db.query(
+          sqlInsert,
+          [name, username, role, hashpwd, email],
+          (err, resp) => {
+            res
+              .status(200)
+              .send({ success: true, message: "Successfully registered!" });
+          }
+        );
       }
-    );
+    });
   } catch (err) {
-    res.send(err);
+    console.log(err);
   }
 };
 
@@ -63,7 +73,7 @@ exports.signin = async (req, res, next) => {
     return;
   }
   const { username, password } = req.body;
-  const sqlInsert = "SELECT password,role FROM projectdb.user where username=?";
+  const sqlInsert = "SELECT * FROM projectdb.user where username=?";
 
   let response;
 
@@ -78,7 +88,12 @@ exports.signin = async (req, res, next) => {
     if (isValid) {
       const token = jwt.sign({ username, role: response.role }, "secret");
 
-      res.json({ role: response.role, success: true, token: token });
+      res.json({
+        role: response.role,
+        success: true,
+        token: token,
+        account: response,
+      });
     } else {
       res.json({ success: false, message: "Invalid Username or Password" });
     }

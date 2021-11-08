@@ -59,26 +59,27 @@ describe("Tesing Login Component", () => {
     // );
   });
 
-  // it("testing axios", () => {
-  //   render(<Login />);
-
+  // it("should be able to submit form", () => {
+  //
   //   const resp = {
   //     role: "creoadmin",
   //     success: true,
   //     token: "xyz",
   //   };
-  //   axios.post.mockResolvedValue(resp);
   //   axios.post.mockImplementation(() => Promise.resolve(resp));
 
+  //   render(<Login />);
   //   const buttonNode = screen.getByTestId("signin");
   //   const usernameNode = screen.getByTestId("uname");
   //   const passwordNode = screen.getByTestId("pass");
   //   fireEvent.change(usernameNode, { target: { value: "ruvi" } });
   //   fireEvent.change(passwordNode, { target: { value: "ruvi" } });
   //   fireEvent.submit(buttonNode);
-  //   return axios.post().then((data) => {
-  //     expect(data).toEqual(resp);
-  //   });
+  //   console.log(axios.post.mock.calls.length);
+  //   expect(axios.post.mock.calls.length).toBe(1);
 
-  //});
+  //   // expect(screen.getByTestId("errorMsg").textContent).toBe(
+  //   // "Invalid Username or Password"
+  //   // );
+  // });
 });

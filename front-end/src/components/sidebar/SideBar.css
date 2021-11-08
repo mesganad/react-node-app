@@ -1,0 +1,9 @@
+.sidebar {
+  background: #f1efec;
+  color: black;
+  padding: 10px;
+  /* border: 2px solid black; */
+  width: 200px;
+  height: 550px;
+  border-radius: 5px;
+}

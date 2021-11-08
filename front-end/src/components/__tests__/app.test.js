@@ -6,7 +6,6 @@ import userEvent from "@testing-library/user-event";
 
 import App from "../../App";
 import NavBar from "../NavBar/NavBar";
-import Login from "../authentication/Login";
 
 configure({ adapter: new Adapter() });
 
